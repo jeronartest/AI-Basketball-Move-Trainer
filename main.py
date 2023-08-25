@@ -46,10 +46,11 @@ with mp_pose.Pose(min_detection_confidence=0.5,
 
     counter = 0  # movement of exercise
     status = True  # state of move
+    action_type = args["action_type"]
+    move_type = args["move_type"]
     while cap.isOpened():
         ret, frame = cap.read()
         # result_screen = np.zeros((250, 400, 3), np.uint8)
-
         frame = cv2.resize(frame, (800, 480), interpolation=cv2.INTER_AREA)
         # recolor frame to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -62,13 +63,13 @@ with mp_pose.Pose(min_detection_confidence=0.5,
 
         try:
             landmarks = results.pose_landmarks.landmark
-            move_type = determine_movement_type(args["move_type"], landmarks)
-            counter, status = move_type.calculate_exercise(
-                args["action_type"], counter, status)
+            move_type_inst = determine_movement_type(move_type, landmarks)
+            counter, status = move_type_inst.calculate_exercise(
+                action_type, counter, status)
         except:
             pass
 
-        frame = score_table(args["action_type"], frame, counter, status)
+        frame = score_table(move_type, action_type, frame, counter, status)
 
         # render detections (for landmarks)
         mp_drawing.draw_landmarks(
