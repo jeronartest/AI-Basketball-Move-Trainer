@@ -1,0 +1,11 @@
+# Python Cache File
+**/__pycache__/
+
+# Jetbrains Files
+**/.idea/
+
+# Visual Studio Code Files
+**/.vscode/
+
+# MacOS Files
+.DS_Store
