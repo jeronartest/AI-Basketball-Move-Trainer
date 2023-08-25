@@ -94,22 +94,10 @@ def score_table(move_type, action_type, frame, context):
         cv2.putText(frame, "Accuracy : " + str(status), (10, height),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
-    if "r_area_side" in context:
-        height += 35
-        r_area_side = context['r_area_side']
-        cv2.putText(frame, "Right Area Side (Angle) : " + str(r_area_side), (10, height),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
-
-    if "r_area_arms" in context:
-        height += 35
-        r_area_arms = context['r_area_arms']
-        cv2.putText(frame, "Right Area Arms (Angle) : " + str(r_area_arms), (10, height),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
-
     if "accuracy_num" in context:
         height += 35
         accuracy_num = determine_accuracy_name(context['accuracy_num'])
-        cv2.putText(frame, "Right Area Arms (Angle) : " + str(accuracy_num), (10, height),
+        cv2.putText(frame, "Accuracy Status: " + str(accuracy_num), (10, height),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
     return frame

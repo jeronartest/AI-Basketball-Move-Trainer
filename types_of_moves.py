@@ -31,13 +31,9 @@ class TypeOfMove(BodyPartAngle):
         from utils import detection_body_part
 
         r_arm_angle = self.angle_of_the_right_arm()
-             
-        left_elbow = detection_body_part(self.landmarks, "LEFT_ELBOW")
         right_elbow = detection_body_part(self.landmarks, "RIGHT_ELBOW")
         nose = detection_body_part(self.landmarks, "NOSE")
-        avg_elbow_y = (left_elbow[1] + right_elbow[1]) / 2
-        
-
+        # ensures that this func only runs if the nose y is greater than the right elbow
         if nose[1] > right_elbow[1] and r_arm_angle > 160:
             r_area_arms = self.angle_of_the_right_area_arms()
             r_area_side = self.angle_of_the_right_area_side()
@@ -46,10 +42,10 @@ class TypeOfMove(BodyPartAngle):
 
             avg = (r_arms_diff + r_side_diff) * 0.5
             accuracy_number = calculate_accuracy_rating(avg)
+            return avg, accuracy_number, r_area_arms, r_area_side
 
-            print(nose[1], right_elbow[1], r_arm_angle)
-            
-            return accuracy, accuracy_number, r_area_arms, r_area_side
+        return accuracy, accuracy_number, r_area_arms, r_area_side
+
 
     def calculate_exercise(self, move_type, context):
 
