@@ -1,6 +1,9 @@
 # AI-Fitness-trainer
 An AI model used to help with the workout session by keeping track of counts and movement using the mediapipe library . Then using the appropriate body part angles , the count of exercise is determined.
 
+Install OpenCV
+
+
 ## Pull-Up Exercise
 ![Pull-Up](https://github.com/itzThillaiC/AI-Fitness-trainer/blob/main/output/output%20pull-up.gif?raw=true)
 

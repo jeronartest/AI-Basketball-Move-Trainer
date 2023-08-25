@@ -2,7 +2,6 @@ import numpy as np
 from body_part_angle import BodyPartAngle
 from utils import *
 
-
 class TypeOfExercise(BodyPartAngle):
     def __init__(self, landmarks):
         super().__init__(landmarks)
