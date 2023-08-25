@@ -94,9 +94,9 @@ def score_table(move_type, action_type, frame, context):
         cv2.putText(frame, "Accuracy : " + str(status), (10, height),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
-    if "accuracy_num" in context:
+    if "accuracy_rating" in context:
         height += 35
-        accuracy_num = determine_accuracy_name(context['accuracy_num'])
+        accuracy_num = determine_accuracy_name(context['accuracy_rating'])
         cv2.putText(frame, "Accuracy Status: " + str(accuracy_num), (10, height),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
