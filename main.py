@@ -38,7 +38,7 @@ else:
     if cv2.VideoCapture(1):
         cap = cv2.VideoCapture(0)  # continuity cam from iphone
     else:
-        cv2.VideoCapture(0) # webcam
+        cap = cv2.VideoCapture(0) # webcam
 
 
 # setup mediapipe
@@ -50,8 +50,8 @@ with mp_pose.Pose(min_detection_confidence=0.5,
     move_type = args["move_type"]
     while cap.isOpened():
         ret, frame = cap.read()
+        frame = image_resize(frame)
         # result_screen = np.zeros((250, 400, 3), np.uint8)
-        frame = cv2.resize(frame, (1920, 1080), interpolation=cv2.INTER_AREA)
         # recolor frame to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame.flags.writeable = False
