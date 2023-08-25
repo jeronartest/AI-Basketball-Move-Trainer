@@ -33,7 +33,7 @@ mp_pose = mp.solutions.pose
 
 
 if args["video_source"] is not None:
-    cap = cv2.VideoCapture("Exercise Videos/" + args["video_source"])
+    cap = cv2.VideoCapture(args["video_source"])
 else:
     cap = cv2.VideoCapture(0)  # webcam
 
@@ -44,14 +44,13 @@ cap.set(4, 480)  # height
 with mp_pose.Pose(min_detection_confidence=0.5,
                   min_tracking_confidence=0.5) as pose:
 
-    counter = 0  # movement of exercise
-    status = True  # state of move
+    ctx = {}  # movement of exercise
     action_type = args["action_type"]
     move_type = args["move_type"]
     while cap.isOpened():
         ret, frame = cap.read()
         # result_screen = np.zeros((250, 400, 3), np.uint8)
-        frame = cv2.resize(frame, (800, 480), interpolation=cv2.INTER_AREA)
+        frame = cv2.resize(frame, (720, 1280), interpolation=cv2.INTER_AREA)
         # recolor frame to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame.flags.writeable = False
@@ -64,12 +63,12 @@ with mp_pose.Pose(min_detection_confidence=0.5,
         try:
             landmarks = results.pose_landmarks.landmark
             move_type_inst = determine_movement_type(move_type, landmarks)
-            counter, status = move_type_inst.calculate_exercise(
-                action_type, counter, status)
+            ctx = move_type_inst.calculate_exercise(
+                action_type, ctx)
         except:
             pass
 
-        frame = score_table(move_type, action_type, frame, counter, status)
+        frame = score_table(move_type, action_type, frame, ctx)
 
         # render detections (for landmarks)
         mp_drawing.draw_landmarks(

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "Please enter the video to run."
-
-$command_name=$1
-python3 main.py -t $command_name
+$move_type=$1
+$action_type=$2
+python main.py -mt $move_type -t $action_type
