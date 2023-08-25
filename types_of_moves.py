@@ -1,119 +1,76 @@
-import numpy as np
 from body_part_angle import BodyPartAngle
 from utils import *
+
+accuracy_him = 0
+accuracy_goat = 1
+accuracy_legend = 2
+accuracy_allstar = 3
+accuracy_league = 4
+accuracy_bum = 5
+
+area_right_side_const = 143.0
+area_right_arms_const = 132.6
+
+
+def calculate_accuracy_rating(number):
+    if number >= 80.0:
+        return accuracy_him
+    if number >= 60.0:
+        return accuracy_goat
+    if number >= 40.0:
+        return accuracy_legend
+    if number >= 20.0:
+        return accuracy_allstar
+    if number >= 1.0:
+        return accuracy_league
+    return accuracy_bum
+
 
 class TypeOfMove(BodyPartAngle):
     def __init__(self, landmarks):
         super().__init__(landmarks)
 
-    def kobe_fade(self, accuracy, status):
-        
+    def kobe_fade(self, accuracy, accuracy_rating, r_area_arms, r_area_side):
+        from utils import detection_body_part
 
-        nose = detection_body_part(self.landmarks, "NOSE")
-        left_elbow = detection_body_part(self.landmarks, "LEFT_ELBOW")
+        r_arm_angle = self.angle_of_the_right_arm()
         right_elbow = detection_body_part(self.landmarks, "RIGHT_ELBOW")
-        avg_shoulder_y = (left_elbow[1] + right_elbow[1])
-
-        left_arm_angle = self.angle_of_the_left_arm()
-        right_arm_angle = self.angle_of_the_left_arm()
-        avg_arm_angle = (left_arm_angle + right_arm_angle)
-
-        left_leg_angle = self.angle_of_the_right_leg()
-        right_leg_angle = self.angle_of_the_left_leg()
-        avg_leg_angle = (left_leg_angle + right_leg_angle) 
-
-        while nose[1] < avg_shoulder_y:
-            arm_angle_result = avg_arm_angle
-
-
-        else:
-            if nose[1] < avg_shoulder_y:
-                status = True
-
-        return [counter, status]
-        
-
-
-
-    def push_up(self, counter, status):
-        left_arm_angle = self.angle_of_the_left_arm()
-        right_arm_angle = self.angle_of_the_left_arm()
-        avg_arm_angle = (left_arm_angle + right_arm_angle) // 2
-
-        if status:
-            if avg_arm_angle < 70:
-                counter += 1
-                status = False
-        else:
-            if avg_arm_angle > 160:
-                status = True
-
-        return [counter, status]
-
-
-    def pull_up(self, counter, status):
         nose = detection_body_part(self.landmarks, "NOSE")
-        left_elbow = detection_body_part(self.landmarks, "LEFT_ELBOW")
-        right_elbow = detection_body_part(self.landmarks, "RIGHT_ELBOW")
-        avg_shoulder_y = (left_elbow[1] + right_elbow[1]) / 2
+        # ensures that this func only runs if the nose y is greater than the right elbow
+        if nose[1] > right_elbow[1] and r_arm_angle > 160:
+            r_area_arms = self.angle_of_the_right_area_arms()
+            r_area_side = self.angle_of_the_right_area_side()
+            r_arms_diff = abs(r_area_arms - area_right_arms_const)
+            r_side_diff = abs(r_area_side - area_right_side_const)
 
-        if status:
-            if nose[1] > avg_shoulder_y:
-                counter += 1
-                status = False
+            avg = (r_arms_diff + r_side_diff) * 0.5
+            accuracy_rating = calculate_accuracy_rating(avg)
+            return avg, accuracy_rating, r_area_arms, r_area_side
 
-        else:
-            if nose[1] < avg_shoulder_y:
-                status = True
+        return accuracy, accuracy_rating, r_area_arms, r_area_side
 
-        return [counter, status]
 
-    def squat(self, counter, status):
-        left_leg_angle = self.angle_of_the_right_leg()
-        right_leg_angle = self.angle_of_the_left_leg()
-        avg_leg_angle = (left_leg_angle + right_leg_angle) // 2
+    def calculate_exercise(self, move_type, context):
 
-        if status:
-            if avg_leg_angle < 70:
-                counter += 1
-                status = False
-        else:
-            if avg_leg_angle > 160:
-                status = True
+        if "accuracy" not in context:
+            context["accuracy"] = 0.0
+        if "accuracy_num" not in context:
+            context["accuracy_rating"] = accuracy_league
+        if "r_area_side" not in context:
+            context["r_area_side"] = 0.0
+        if "r_area_arms" not in context:
+            context["r_area_arms"] = 0.0
 
-        return [counter, status]
+        accuracy = context["accuracy"]
+        num = context["accuracy_rating"]
+        r_area_arms = context["r_area_arms"]
+        r_area_side = context["r_area_side"]
 
-    def walk(self, counter, status):
-        right_knee = detection_body_part(self.landmarks, "RIGHT_KNEE")
-        left_knee = detection_body_part(self.landmarks, "LEFT_KNEE")
-
-        if status:
-            if left_knee[0] > right_knee[0]:
-                counter += 1
-                status = False
-
-        else:
-            if left_knee[0] < right_knee[0]:
-                counter += 1
-                status = True
-
-        return [counter, status]
-
-    def sit_up(self, counter, status):
-        angle = self.angle_of_the_abdomen()
-        if status:
-            if angle < 55:
-                counter += 1
-                status = False
-        else:
-            if angle > 105:
-                status = True
-
-        return [counter, status]
-
-    def calculate_move(self, move_type, accuracy, status):
         if move_type == "kobe-fade":
-            accuracy, status = TypeOfMove(self.landmarks).kobe_fade(
-                accuracy, status)    
+            accuracy, num, r_area_arms, r_area_side = self.kobe_fade(accuracy, num, r_area_arms, r_area_side)
 
-        return [counter, status]
+        context["accuracy"] = accuracy
+        context["accuracy_rating"] = num
+        context["r_area_arms"] = r_area_arms
+        context["r_area_side"] = r_area_side
+        return context
