@@ -18,12 +18,12 @@ python main.py -mt basketball-move -t kobe-fade
 #### Running a Video
 To run the kobe fade basketball move using a specific video, go to the command prompt/command line, and type in the following command:
 ```
-python main.py -mt basketball-move -t kobe-fade -vt {file-path-to-video}
+python main.py -mt basketball-move -t kobe-fade -vs {file-path-to-video}
 ```
 The `{file-path-to-video}` represents where the video exists on your computer. Here is an example of running the kobe-fade using
 a pre-set video called `Jeron_Fade.mov`.
 ```
-python main.py -mt basketball-move -t kobe-fade -vt Moves/Jeron_Fade.mov
+python main.py -mt basketball-move -t kobe-fade -vs Moves/Jeron_Fade.mov
 ```
 
 ## Accuracy Calculations
