@@ -15,6 +15,8 @@ accuracy_legend = 2
 accuracy_allstar = 3
 accuracy_league = 4
 
+enable_angles_view = False
+
 
 def calculate_angle(a, b, c):
     a = np.array(a)
@@ -100,6 +102,18 @@ def score_table(move_type, action_type, frame, context):
         cv2.putText(frame, "Accuracy Status: " + str(accuracy_num), (10, height),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
+    if "r_area_arms" in context and enable_angles_view:
+        height += 35
+        r_area_arms_angle = determine_accuracy_name(context["r_area_arms"])
+        cv2.putText(frame, "Right Area Arms Angle: " + str(r_area_arms_angle), (10, height),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
+
+    if "r_area_side" in context and enable_angles_view:
+        height += 35
+        r_area_side = determine_accuracy_name(context["r_area_side"])
+        cv2.putText(frame, "Right Area Sides Angle: " + str(r_area_side), (10, height),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
+
     return frame
 
 
@@ -107,3 +121,37 @@ def determine_movement_type(argument: str, landmarks):
     if argument == 'basketball-move':
         return TypeOfMove(landmarks)
     return TypeOfExercise(landmarks)
+
+
+def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    if image is not None:
+        (h, w) = image.shape[:2]
+    else:
+        (h, w) = (1920, 1080)
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv2.resize(image, dim, interpolation=inter)
+    # return the resized image
+    return resized

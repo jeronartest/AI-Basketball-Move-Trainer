@@ -42,11 +42,9 @@ class TypeOfMove(BodyPartAngle):
             r_area_side = self.angle_of_the_right_area_side()
             r_arms_diff = abs(r_area_arms - area_right_arms_const)
             r_side_diff = abs(r_area_side - area_right_side_const)
-
-            avg = (r_arms_diff + r_side_diff) * 0.5
+            avg = 100.0 - (r_arms_diff + r_side_diff) * 0.5
             accuracy_rating = calculate_accuracy_rating(avg)
             return avg, accuracy_rating, r_area_arms, r_area_side
-
         return accuracy, accuracy_rating, r_area_arms, r_area_side
 
 
