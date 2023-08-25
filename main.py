@@ -7,8 +7,15 @@ from types_of_exercise import TypeOfExercise
 
 
 ap = argparse.ArgumentParser()
+# Adds an optional argument
+ap.add_argument("-mt",
+                "--move-type",
+                type=str,
+                help="The types of move type",
+                required=False)
+# Adds the argument (-t for exercise type) and adds the argument to the argument parser
 ap.add_argument("-t",
-                "--exercise_type",
+                "--action-type",
                 type=str,
                 help='Type of activity to do',
                 required=True)
@@ -18,8 +25,7 @@ ap.add_argument("-vs",
                 help='Type of activity to do',
                 required=False)
 args = vars(ap.parse_args())
-                
-                
+args = vars(ap.parse_args())
 args = vars(ap.parse_args())
 
 mp_drawing = mp.solutions.drawing_utils
@@ -56,12 +62,13 @@ with mp_pose.Pose(min_detection_confidence=0.5,
 
         try:
             landmarks = results.pose_landmarks.landmark
-            counter, status = TypeOfExercise(landmarks).calculate_exercise(
-                args["exercise_type"], counter, status)
+            move_type = determine_movement_type(args["move_type"], landmarks)
+            counter, status = move_type.calculate_exercise(
+                args["action_type"], counter, status)
         except:
             pass
 
-        frame = score_table(args["exercise_type"], frame, counter, status)
+        frame = score_table(args["action_type"], frame, counter, status)
 
         # render detections (for landmarks)
         mp_drawing.draw_landmarks(

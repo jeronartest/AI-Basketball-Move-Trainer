@@ -4,12 +4,15 @@ import pandas as pd
 import numpy as np
 import cv2
 
+from types_of_exercise import TypeOfExercise
+from types_of_moves import TypeOfMove
+
 mp_pose = mp.solutions.pose
 
 def calculate_angle(a, b, c):
-    a = np.array(a)  
-    b = np.array(b)  
-    c = np.array(c)  
+    a = np.array(a)
+    b = np.array(b)
+    c = np.array(c)
 
     radians = np.arctan2(c[1] - b[1], c[0] - b[0]) -\
               np.arctan2(a[1] - b[1], a[0] - b[0])
@@ -50,4 +53,9 @@ def score_table(exercise, frame , counter, status):
     cv2.putText(frame, "Status : " + str(status), (10, 135),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2, cv2.LINE_AA)
     return frame
-    
+
+
+def determine_movement_type(argument: str, landmarks):
+    if argument == 'basketball-move':
+        return TypeOfMove(landmarks)
+    return TypeOfExercise(landmarks)

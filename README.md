@@ -66,3 +66,7 @@ python main.py -t sit-up
 # or python main.py -t walk
 ```
 
+For doing additional basketball movement types, use these commands below:
+```
+python main.py -mt basketball-move -t kobe-fade
+```
