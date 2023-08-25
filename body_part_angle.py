@@ -19,7 +19,7 @@ class BodyPartAngle:
         l_shoulder = detection_body_part(self.landmarks, "LEFT_SHOULDER")
         from utils import calculate_angle
         return calculate_angle(r_elbow, r_shoulder, l_shoulder)
-
+    
     def angle_of_the_right_area_side(self):
         from utils import detection_body_part
         r_shoulder = detection_body_part(self.landmarks, "RIGHT_SHOULDER")

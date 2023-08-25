@@ -1,4 +1,5 @@
 from body_part_angle import BodyPartAngle
+from utils import *
 
 accuracy_him = 0
 accuracy_goat = 1
@@ -27,13 +28,28 @@ class TypeOfMove(BodyPartAngle):
         super().__init__(landmarks)
 
     def kobe_fade(self, accuracy, accuracy_number, r_area_arms, r_area_side):
-        r_area_arms = self.angle_of_the_right_area_arms()
-        r_area_side = self.angle_of_the_right_area_side()
-        r_arms_diff = abs(r_area_arms - area_right_arms_const)
-        r_side_diff = abs(r_area_side - area_right_side_const)
-        avg = (r_arms_diff + r_side_diff) * 0.5
-        accuracy_number = calculate_accuracy_rating(avg)
-        return accuracy, accuracy_number, r_area_arms, r_area_side
+        from utils import detection_body_part
+
+        r_arm_angle = self.angle_of_the_right_arm()
+             
+        left_elbow = detection_body_part(self.landmarks, "LEFT_ELBOW")
+        right_elbow = detection_body_part(self.landmarks, "RIGHT_ELBOW")
+        nose = detection_body_part(self.landmarks, "NOSE")
+        avg_elbow_y = (left_elbow[1] + right_elbow[1]) / 2
+        
+
+        if nose[1] > right_elbow[1] and r_arm_angle > 160:
+            r_area_arms = self.angle_of_the_right_area_arms()
+            r_area_side = self.angle_of_the_right_area_side()
+            r_arms_diff = abs(r_area_arms - area_right_arms_const)
+            r_side_diff = abs(r_area_side - area_right_side_const)
+
+            avg = (r_arms_diff + r_side_diff) * 0.5
+            accuracy_number = calculate_accuracy_rating(avg)
+
+            print(nose[1], right_elbow[1], r_arm_angle)
+            
+            return accuracy, accuracy_number, r_area_arms, r_area_side
 
     def calculate_exercise(self, move_type, context):
 
