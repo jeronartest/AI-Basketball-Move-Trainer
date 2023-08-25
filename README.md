@@ -26,6 +26,9 @@ a pre-set video called `Jeron_Fade.mov`.
 python main.py -mt basketball-move -t kobe-fade -vs Moves/Jeron_Fade.mov
 ```
 
+Here is the result of running this video:
+![output_jeron_fade.gif](output%2Foutput_jeron_fade.gif)
+
 ## Accuracy Calculations
 
 The accuracy is measured at specific times that is dependent on the move that the user is trying to perform.

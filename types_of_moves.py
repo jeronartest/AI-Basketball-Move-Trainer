@@ -54,7 +54,7 @@ class TypeOfMove(BodyPartAngle):
 
         if "accuracy" not in context:
             context["accuracy"] = 0.0
-        if "accuracy_num" not in context:
+        if "accuracy_rating" not in context:
             context["accuracy_rating"] = accuracy_league
         if "r_area_side" not in context:
             context["r_area_side"] = 0.0
